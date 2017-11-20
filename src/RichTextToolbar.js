@@ -12,8 +12,20 @@ const defaultActions = [
   actions.insertLink
 ];
 
+// Custom Action
+const leftActions = [
+  actions.hashTag
+];
+
+const rightActions = [
+  actions.takePicture,
+  actions.insertImage,
+];
+
 function getDefaultIcon() {
   const texts = {};
+  texts[actions.hashTag] = require('../img/icon_format_bold.png');
+  texts[actions.takePicture] = require('../img/icon_format_italic.png');
   texts[actions.insertImage] = require('../img/icon_format_media.png');
   texts[actions.setBold] = require('../img/icon_format_bold.png');
   texts[actions.setItalic] = require('../img/icon_format_italic.png');
@@ -31,6 +43,7 @@ export default class RichTextToolbar extends Component {
     actions: PropTypes.array,
     onPressAddLink: PropTypes.func,
     onPressAddImage: PropTypes.func,
+    onCameraBtnPressed: PropTypes.func,
     selectedButtonStyle: PropTypes.object,
     iconTint: PropTypes.any,
     selectedIconTint: PropTypes.any,
@@ -105,7 +118,7 @@ export default class RichTextToolbar extends Component {
       <TouchableOpacity
           key={action}
           style={[
-            {height: 50, width: 50, justifyContent: 'center'},
+            styles.toolbarBtn,
             selected ? this._getButtonSelectedStyle() : this._getButtonUnselectedStyle()
           ]}
           onPress={() => this._onPress(action)}
@@ -121,17 +134,27 @@ export default class RichTextToolbar extends Component {
         this._defaultRenderAction(action, selected);
   }
 
+  _renderActionBtnContainer = (actions) => {
+    let btnArray = []
+    actions.map(action => {
+      btnArray.push(this._defaultRenderAction(action, false))
+    })
+    return (
+      <View style={styles.toolbarBtnContainer}>
+        {btnArray}
+      </View>
+    )
+  }
+
   render() {
     return (
       <View
-          style={[{height: 50, backgroundColor: '#D3D3D3', alignItems: 'center'}, this.props.style]}
+          style={[styles.container, this.props.style]}
       >
-        <ListView
-            horizontal
-            contentContainerStyle={{flexDirection: 'row'}}
-            dataSource={this.state.ds}
-            renderRow= {(row) => this._renderAction(row.action, row.selected)}
-        />
+        <View style={styles.toolbarRow}>
+          {this._renderActionBtnContainer(leftActions)}
+          {this._renderActionBtnContainer(rightActions)}
+        </View>
       </View>
     );
   }
@@ -180,13 +203,36 @@ export default class RichTextToolbar extends Component {
         }
         break;
         break;
+      case actions.takePicture:
+        this.state.editor.prepareInsert();
+        if(this.props.onCameraBtnPressed) {
+          this.props.onCameraBtnPressed();
+        }
+        break;
     }
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height: 50, 
+    backgroundColor: 'rgb(238,238,238)', 
+  },  
+  toolbarRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }, 
+  toolbarBtnContainer: {
+    flexDirection: 'row',
+  }, 
+  toolbarBtn: {
+    height: 50, 
+    width: 50, 
+    justifyContent: 'center'
+  },
   defaultSelectedButton: {
     backgroundColor: 'red'
   },
-  defaultUnselectedButton: {}
+  defaultUnselectedButton: {},
 });
