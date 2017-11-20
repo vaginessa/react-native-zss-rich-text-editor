@@ -886,6 +886,12 @@
 
 				$(document).on('selectionchange',function(e){
 					console.log('selectionchange');
+					// Fix for https://github.com/wix/react-native-zss-rich-text-editor/issues/39
+					if (/Android/i.test(navigator.userAgent)) {
+						// skip
+					} else {
+						zss_editor.calculateEditorHeightWithCaretPosition();
+					}
 					zss_editor.calculateEditorHeightWithCaretPosition();
 					zss_editor.setScrollPosition();
 					zss_editor.enabledEditingItems(e);
