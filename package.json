@@ -9,10 +9,10 @@
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "prop-types": "^15.5.10",
-    "react-native-webview-bridge-updated": "iyegoroff/react-native-webview-bridge#rn-0.47-fix"
+    "react-native-webview-bridge-updated": "^1.0.0"
   },
   "peerDependencies": {
+    "react": "*",
     "react-native": ">=0.31.0"
   }
 }
