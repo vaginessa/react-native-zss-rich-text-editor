@@ -89,7 +89,9 @@ export default class RichTextEditor extends Component {
     const {marginTop = 0, marginBottom = 0} = this.props.style;
     const spacing = marginTop + marginBottom + top + bottom;
 
-    const editorAvailableHeight = Dimensions.get('window').height - keyboardHeight - spacing;
+    // Fix for https://github.com/wix/react-native-zss-rich-text-editor/issues/32
+    const extraPadding = 100;
+    const editorAvailableHeight = Dimensions.get('window').height - keyboardHeight - spacing - extraPadding;
     this.setEditorHeight(editorAvailableHeight);
   }
   
