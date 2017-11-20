@@ -18,8 +18,8 @@ const leftActions = [
 ];
 
 const rightActions = [
+  actions.takePicture,
   actions.insertImage,
-  actions.takePicture
 ];
 
 function getDefaultIcon() {
@@ -43,6 +43,7 @@ export default class RichTextToolbar extends Component {
     actions: PropTypes.array,
     onPressAddLink: PropTypes.func,
     onPressAddImage: PropTypes.func,
+    onCameraBtnPressed: PropTypes.func,
     selectedButtonStyle: PropTypes.object,
     iconTint: PropTypes.any,
     selectedIconTint: PropTypes.any,
@@ -202,6 +203,12 @@ export default class RichTextToolbar extends Component {
         }
         break;
         break;
+      case actions.takePicture:
+        this.state.editor.prepareInsert();
+        if(this.props.onCameraBtnPressed) {
+          this.props.onCameraBtnPressed();
+        }
+        break;
     }
   }
 }
@@ -209,7 +216,7 @@ export default class RichTextToolbar extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 50, 
-    backgroundColor: '#D3D3D3', 
+    backgroundColor: 'rgb(238,238,238)', 
   },  
   toolbarRow: {
     flex: 1,
