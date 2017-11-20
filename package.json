@@ -10,7 +10,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "prop-types": "^15.5.10",
-    "react-native-webview-bridge-updated": "iyegoroff/react-native-webview-bridge#rn-0.47-android-fix"
+    "react-native-webview-bridge-updated": "iyegoroff/react-native-webview-bridge#rn-0.47-fix"
   },
   "peerDependencies": {
     "react-native": ">=0.31.0"
