@@ -899,12 +899,23 @@
 
 				// Make sure that when we tap anywhere in the document we focus on the editor
 				$(window).on('touchmove', function(e) {
+
 					zss_editor.isDragging = true;
 					zss_editor.updateScrollOffset = true;
 					zss_editor.setScrollPosition();
 					zss_editor.enabledEditingItems(e);
 				});
 				$(window).on('touchstart', function(e) {
+					var nodeName = e.target.nodeName.toLowerCase();
+					if (nodeName === "input") {
+						var id = e.target.id;
+						var data = $('#'+id).attr('data');
+						// check if input is related to close button
+						if (data.indexOf('imageContainer' >= 0)) {
+							$('#'+data).remove();
+						}
+					}
+
 					zss_editor.isDragging = false;
 				});
 				$(window).on('scroll', function(e) {
@@ -922,7 +933,7 @@
 				whenPastingInsertAsPlainText('zss_editor_title');
 				whenPastingInsertAsPlainText('zss_editor_content');
 
-				zss_editor.focusTitle();
+				zss_editor.focusContent();
 
 				setTimeout(function() {
 					WebViewBridge.send(JSON.stringify({type: 'ZSS_INITIALIZED'}))
@@ -1352,11 +1363,30 @@
 				zss_editor.backuprange();
 			}
 
-			zss_editor.insertImage = function(attributes) {
+			zss_editor.insertImage = function(data) {
 				zss_editor.restorerange();
-				var imageContainer = $('<div><img></div>');
-				imageContainer.find('img').attr(attributes);
-				zss_editor.insertHTML('<br>' + imageContainer.html() + '<br>');
+				var attributes = data['attributes']
+				var closeImageData = data['closeImageData']
+				
+				var index = attributes['index'];
+				var imageContainerId = 'imageContainer' + index;
+				var closeButtonId = 'closeButton' + index
+				var insertedImageId = 'insertedImage' + index
+
+				var imageContainer = $('<div><div class="imageContainer" id="'+imageContainerId+'">'+
+					'<input id="'+closeButtonId+'" class="closeButton" type="image" src="'+closeImageData+'" data="'+imageContainerId+'">'+
+					'<img class="insertedImage" id="'+insertedImageId+'"></div></div>');
+
+				imageContainer.find("img#"+insertedImageId).attr(attributes);
+
+				zss_editor.insertHTML(imageContainer.html() + '<br>');
+				// remove the whole imageContainer if user remove image using backspace
+				$("#"+imageContainerId).bind("DOMNodeRemoved", function(e) {
+					var id = e.target.id;
+					if (id === insertedImageId) {
+						$("#"+imageContainerId).remove();
+					}
+				});
 				zss_editor.enabledEditingItems();
 			}
 
@@ -1669,8 +1699,8 @@
 			}
 
 			body {
-				padding-left:10px;
-				padding-right:10px;
+				padding-left: 0px;
+				padding-right: 0px;
 				padding-top: 0px;
 				padding-bottom: 0px;
 				overflow-y: scroll;
@@ -1680,12 +1710,39 @@
 				box-sizing: border-box;
 			}
 
+			.imageContainer {
+				position: relative;
+			}
+
+			.insertedImage {
+				border-color: rgb(27, 168, 250);
+				border-width: 4px;
+				border-style: solid;
+				box-sizing: border-box;
+			}
+
+			.closeButton {
+				position:absolute;
+				top:0px;
+				right:0px;
+				width:30px;
+				height:30px;
+				outline:none;
+				border:none;
+				padding:0px;
+			}
+
+			#closeImage {
+				width:20px;
+				height:20px;
+			}
+
 			img.zs_active {
 				/*border: 2px dashed #000;*/
 			}
 
 			img {
-				width: 98%;
+				width: 100%;
 				margin-left:auto;
 				margin-right:auto;
 				display: block;
@@ -1705,8 +1762,8 @@
 			}
 
 			#zss_editor_content {
-				padding-left: 10px;
-				padding-right: 10px;
+				padding-left: 0px;
+				padding-right: 0px;
 			}
 
 			div.zss_editor_title {
@@ -1717,8 +1774,8 @@
 			}
 
 			#zss_editor_title {
-				padding-left: 10px;
-				padding-right: 10px;
+				padding-left: 0px;
+				padding-right: 0px;
 			}
 
 			[placeholder]:empty:before {
