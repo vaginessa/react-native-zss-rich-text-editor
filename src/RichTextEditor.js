@@ -466,8 +466,8 @@ export default class RichTextEditor extends Component {
     this._sendAction(actions.updateLink, {url, title});
   }
 
-  insertImage(attributes) {
-    this._sendAction(actions.insertImage, attributes);
+  insertImage(attributes, closeImageData) {
+    this._sendAction(actions.insertImage, {attributes, closeImageData});
     this.prepareInsert(); //This must be called BEFORE insertImage. But WebViewBridge uses a stack :/
   }
 
@@ -623,12 +623,8 @@ const styles = StyleSheet.create({
   },
   innerModal: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingTop: 20,
     paddingBottom: PlatformIOS ? 0 : 20,
-    paddingLeft: 20,
-    paddingRight: 20,
     alignSelf: 'stretch',
-    margin: 40,
     borderRadius: PlatformIOS ? 8 : 2
   },
   button: {
