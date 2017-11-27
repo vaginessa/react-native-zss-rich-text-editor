@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ListView, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {ListView, View, TouchableOpacity, Image, StyleSheet, Dimensions} from 'react-native';
 import {actions} from './const';
+import ImagePicker from 'react-native-image-crop-picker'
 
 const defaultActions = [
   actions.insertImage,
@@ -37,6 +38,8 @@ function getDefaultIcon() {
 
 
 export default class RichTextToolbar extends Component {
+  imageCounter: number
+  imageGroupCounter: number
 
   static propTypes = {
     getEditor: PropTypes.func.isRequired,
@@ -55,6 +58,8 @@ export default class RichTextToolbar extends Component {
   constructor(props) {
     super(props);
     const actions = this.props.actions ? this.props.actions : defaultActions;
+    this.imageCounter = 0
+    this.imageGroupCounter = 0
     this.state = {
       editor: undefined,
       selectedItems: [],
@@ -146,6 +151,70 @@ export default class RichTextToolbar extends Component {
     )
   }
 
+  onPressAddImage () {
+    const width = Dimensions.get('window').width
+    const editor = this.props.getEditor();
+    ImagePicker.openPicker({
+      multiple: true,
+      includeBase64: true,
+      mediaType: 'photo',
+      compressImageMaxWidth: 500,
+      compressImageMaxHeight: 500
+    }).then(images => {
+
+      const closeImageData =
+      'data:image/png;base64,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' +
+      'ugAAAABJRU5ErkJggg=='
+
+      let isMultiple = images.length > 1
+
+      images.map(image => {
+        image.src = 'data:image/png;base64,' + image.data
+        image.data = undefined
+        
+        // calculate correct image size for display
+        let ratio = image.width / image.height
+        if (isMultiple) {
+          image.width = width / 3
+          image.height = image.width
+        } else {
+          image.width = width
+          image.height = width / ratio
+        }
+        image.index = this.imageCounter
+        image.groupId = this.imageGroupCounter
+  
+        // all prop of image here will be passed as prop of <img> in webview
+        editor.insertImage(image, closeImageData)
+        this.imageCounter++
+      })
+      this.imageGroupCounter++
+    })
+  }
+
   render() {
     return (
       <View
@@ -198,10 +267,7 @@ export default class RichTextToolbar extends Component {
         break;
       case actions.insertImage:
         this.state.editor.prepareInsert();
-        if(this.props.onPressAddImage) {
-          this.props.onPressAddImage();
-        }
-        break;
+        this.onPressAddImage();
         break;
       case actions.takePicture:
         this.state.editor.prepareInsert();
