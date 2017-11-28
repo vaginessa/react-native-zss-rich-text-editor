@@ -1364,14 +1364,24 @@
 			}
 
 			zss_editor.insertImage = function(data) {
-				zss_editor.restorerange();
+				zss_editor.restorerange(); 
 				var attributes = data['attributes']
 				var closeImageData = data['closeImageData']
 				
 				var index = attributes['index'];
+				var groupId = attributes['groupId'];
+				var imageGroupContainerId = 'imageGroupContainer' + groupId;
 				var imageContainerId = 'imageContainer' + index;
 				var closeButtonId = 'closeButton' + index
 				var insertedImageId = 'insertedImage' + index
+				var width = attributes['width'];
+				var height = attributes['height'];
+
+				// create imageGroupContainer if not existed
+				if ($('#'+imageGroupContainerId).length == 0) {
+					var imageGroupContainer = $('<div><div class="imageGroupContainer" id="'+imageGroupContainerId+'"></div></div>');
+					zss_editor.insertHTML(imageGroupContainer.html());
+				}
 
 				var imageContainer = $('<div><div class="imageContainer" id="'+imageContainerId+'">'+
 					'<input id="'+closeButtonId+'" class="closeButton" type="image" src="'+closeImageData+'" data="'+imageContainerId+'">'+
@@ -1379,7 +1389,9 @@
 
 				imageContainer.find("img#"+insertedImageId).attr(attributes);
 
-				zss_editor.insertHTML(imageContainer.html() + '<br>');
+				// append imageContainer to corresponding group
+				$('#'+imageGroupContainerId).append(imageContainer.html());
+
 				// remove the whole imageContainer if user remove image using backspace
 				$("#"+imageContainerId).bind("DOMNodeRemoved", function(e) {
 					var id = e.target.id;
@@ -1387,6 +1399,10 @@
 						$("#"+imageContainerId).remove();
 					}
 				});
+				
+				// change imageContainer's size to fit image size
+				$("#"+imageContainerId).width(width)
+				$("#"+imageContainerId).height(height)
 				zss_editor.enabledEditingItems();
 			}
 
@@ -1706,8 +1722,13 @@
 				overflow-y: scroll;
 				-webkit-overflow-scrolling: touch;
 				height: 100%;
-				width: 97%;
+				width: 100%;
 				box-sizing: border-box;
+			}
+
+			.imageGroupContainer {
+				display: flex;
+				flex-wrap: wrap;
 			}
 
 			.imageContainer {
@@ -1742,7 +1763,6 @@
 			}
 
 			img {
-				width: 100%;
 				margin-left:auto;
 				margin-right:auto;
 				display: block;
