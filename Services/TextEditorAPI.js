@@ -10,7 +10,7 @@ const userJwtSelector = state => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhY2Nvd
 const compose = require('ramda/src/compose')
 const map = require('ramda/src/map')
 
-const create = (baseURL = "http://staging-newsfeed.wezeroplus.com/v2"): ApiClient => {
+const create = (baseURL = "https://postman-echo.com"): ApiClient => {
   const api = apisauce.create({
     baseURL,
     headers: {
@@ -23,11 +23,19 @@ const create = (baseURL = "http://staging-newsfeed.wezeroplus.com/v2"): ApiClien
     api.addMonitor(console.tron.apisauce)
   }
 
-  const uploadImage = function * () {
-    console.log("TextEditorApi - uploadImage :", userJwtSelector)
-    const userJwt = yield select(userJwtSelector)
-    api.setHeader('Authorization', `Bearer ${userJwt}`)
-    return yield api.get(apiEndpoints.myMembershipPoint, { currencyTypeId: 1 })
+  const uploadImage = function * (image) {
+    const params = {
+      testing: 'testing'
+    }
+
+    const data = new FormData()
+    Object.keys(params).forEach(key => {
+      if (params[key]) {
+        data.append(key, params[key])
+      }
+    })
+
+    return yield api.post(apiEndpoints.uploadImage, data)
   }
 
   return {

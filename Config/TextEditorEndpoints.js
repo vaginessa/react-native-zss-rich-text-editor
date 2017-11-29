@@ -1,5 +1,5 @@
 
 export default {
-    myMembershipPoint: 'currency/balances',
+    uploadImage: 'post',
   }
   

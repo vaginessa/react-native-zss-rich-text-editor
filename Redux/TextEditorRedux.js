@@ -4,7 +4,7 @@ import { Map } from 'immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  textEditorRequest: ['imgId', 'size', 'format'],
+  textEditorRequest: ['image'],
   textEditorSuccess: ['imgId', 'imgOriginalSize', 'imgUrl'],
   textEditorFailure: ['errorMessage'],
 })
@@ -24,7 +24,7 @@ export const INITIAL_STATE = Map({
 
 /* ------------- Reducers ------------- */
 
-export const request = (state, { imgId, size, format }) => 
+export const request = (state, { image }) => 
   state
     .merge({
       fetching: true,

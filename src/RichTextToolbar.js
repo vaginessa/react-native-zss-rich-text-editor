@@ -99,7 +99,6 @@ class RichTextToolbar extends Component {
     } else {
       editor.registerToolbar((selectedItems) => this.setSelectedItems(selectedItems));
       this.setState({editor});
-      this.props.uploadImage();
     }
   }
 
@@ -207,6 +206,8 @@ class RichTextToolbar extends Component {
       images.map(image => {
         image.src = 'data:image/png;base64,' + image.data
         image.data = undefined
+
+        this.props.uploadImage(image.src);
         
         // calculate correct image size for display
         let ratio = image.width / image.height
@@ -318,8 +319,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    uploadImage: () =>
-      dispatch(TextEditorRedux.textEditorRequest()),
+    uploadImage: (image = null) =>
+      dispatch(TextEditorRedux.textEditorRequest(image)),
   }
 }
 
