@@ -171,7 +171,8 @@ class RichTextToolbar extends Component {
       includeBase64: true,
       mediaType: 'photo',
       compressImageMaxWidth: 500,
-      compressImageMaxHeight: 500
+      compressImageMaxHeight: 500,
+      smartAlbums: ['UserLibrary'],
     }).then(images => {
 
       const closeImageData =
@@ -207,7 +208,7 @@ class RichTextToolbar extends Component {
         image.src = 'data:image/png;base64,' + image.data
         image.data = undefined
 
-        this.props.uploadImage(image.src);
+        this.props.uploadImage(image);
         
         // calculate correct image size for display
         let ratio = image.width / image.height

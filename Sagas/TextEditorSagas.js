@@ -8,6 +8,7 @@ const pathOr = require('ramda/src/pathOr')
 export function * uploadImage (api, { image }) {
   try {
     const response = yield call(api.uploadImage, image)
+    // TODO: update response path later
     const imgId = path(['data', 'data', 'balanceDisplay'], response)
     const imgOriginalSize = pathOr(
       false,
@@ -16,10 +17,7 @@ export function * uploadImage (api, { image }) {
     )
     const imgUrl = pathOr([], ['data', 'data', 'transactions'], response)
   
-    console.log("uploadImage response")
-  
-    if (response.ok == false) {
-      console.log("uploadImage textEditorSuccess")
+    if (response.ok) {
       yield put(
           TextEditorActions.textEditorSuccess(
               "img_id",
@@ -38,6 +36,6 @@ export function * uploadImage (api, { image }) {
       )
     }
   } catch(e) {
-    console.error(e)
+    // TODO: handle error
   }
 }

@@ -24,16 +24,16 @@ const create = (baseURL = "https://postman-echo.com"): ApiClient => {
   }
 
   const uploadImage = function * (image) {
-    const params = {
-      testing: 'testing'
-    }
+    const userJwt = yield select(userJwtSelector)
+    api.setHeader('Authorization', `Bearer ${userJwt}`)
+    api.setHeader('Content-Type', `multipart/form-data;`)
+    api.setHeader('Accept', `application/json`)
 
     const data = new FormData()
-    Object.keys(params).forEach(key => {
-      if (params[key]) {
-        data.append(key, params[key])
-      }
-    })
+    data.append('picture', {uri: image.path, 'name': 'jj.jpg', type: 'image/jpg'})
+    data.append('id', image.localIdentifier)
+    data.append('size', image.width + 'x' + image.height)
+    data.append('format', image.mime)
 
     return yield api.post(apiEndpoints.uploadImage, data)
   }
