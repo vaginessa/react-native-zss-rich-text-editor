@@ -10,7 +10,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "react-native-webview-bridge-updated": "^1.0.0",
-    "react-native-parse-html": "^2.2.6"
+    "react-native-parse-html": "^2.2.6",
+    "react-native-htmlview": "^0.12.1"
   },
   "peerDependencies": {
     "react": "*",
