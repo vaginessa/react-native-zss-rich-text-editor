@@ -9,7 +9,8 @@
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "react-native-webview-bridge-updated": "^1.0.0"
+    "react-native-webview-bridge-updated": "^1.0.0",
+    "react-native-parse-html": "^2.2.6"
   },
   "peerDependencies": {
     "react": "*",
