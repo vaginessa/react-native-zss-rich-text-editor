@@ -53,6 +53,7 @@ export default class RichTextToolbar extends Component {
     unselectedButtonStyle: PropTypes.object,
     renderAction: PropTypes.func,
     iconMap: PropTypes.object,
+    isGridView: PropTypes.bool,
   };
 
   constructor(props) {
@@ -218,10 +219,10 @@ export default class RichTextToolbar extends Component {
             const format = attr.value
             imageBlock['format'] = format.substring(format.lastIndexOf("/") + 1, format.length)
             break
-          case 'width':
+          case 'originalwidth':
             imageBlock['width'] = parseInt(attr.value)
             break
-          case 'height':
+          case 'originalheight':
             imageBlock['height'] = parseInt(attr.value)
             break
         }
@@ -307,7 +308,10 @@ export default class RichTextToolbar extends Component {
         
         // calculate correct image size for display
         let ratio = image.width / image.height
-        if (isMultiple) {
+        image.originalWidth = image.width
+        image.originalHeight = image.height
+
+        if (isMultiple && this.props.isGridView) {
           image.width = width / 3
           image.height = image.width
         } else {
