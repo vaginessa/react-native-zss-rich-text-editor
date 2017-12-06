@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import WebViewBridge from 'react-native-webview-bridge-updated';
 import {InjectedMessageHandler} from './WebviewMessageHandler';
 import {actions, messages} from './const';
-import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions} from 'react-native';
+import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions, ScrollView} from 'react-native';
+import HTMLView from 'react-native-htmlview'
 
 const injectScript = `
   (function () {
@@ -290,6 +291,20 @@ export default class RichTextEditor extends Component {
   _upperCaseButtonTextIfNeeded(buttonText) {
     return PlatformIOS ? buttonText : buttonText.toUpperCase();
   }
+
+  // to test htmlview
+  // render() {
+  //   const htmlContent = `<p style="color:red; font-size: 20px">dllm<b>dllm abcadsfasef fase </b></p><p>dllm abcadsfasef fase asdfcasvfasfevasefvasefvasefvasefvasefvasefva</p>`;
+
+  //   return (
+  //     <ScrollView style={styles.container}>
+  //       <HTMLView
+  //         value={htmlContent}
+  //         stylesheet={styles}
+  //       />
+  //     </ScrollView>
+  //   );
+  // }
 
   render() {
     //in release build, external html files in Android can't be required, so they must be placed in the assets folder and accessed via uri
@@ -651,5 +666,19 @@ const styles = StyleSheet.create({
     marginLeft: -20,
     marginRight: -20,
     marginTop: 20
-  }
+  },
+  // a: {
+  //   fontWeight: '300',
+  //   color: '#FF3366', // make links coloured pink
+  // },
+  // img: {
+  //   width: Dimensions.get('window').width,
+  //   height: 300,
+  // }, 
+  // container: {
+  //   flex: 1
+  // },
+  // p : {
+  //   fontSize: 24
+  // }
 });
