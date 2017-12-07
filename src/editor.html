@@ -1371,6 +1371,8 @@
 				var index = attributes['index'];
 				var groupId = attributes['groupId'];
 				var imageGroupContainerId = 'imageGroupContainer' + groupId;
+				// element id for p after the image group container
+				var pAfterImageGroupContainerId = 'pAfterImageGroupContainer' + groupId;
 				var imageContainerId = 'imageContainer' + index;
 				var closeButtonId = 'closeButton' + index
 				var insertedImageId = 'insertedImage' + index
@@ -1381,6 +1383,9 @@
 				if ($('#'+imageGroupContainerId).length == 0) {
 					var imageGroupContainer = $('<div><div class="imageGroupContainer" id="'+imageGroupContainerId+'"></div></div>');
 					zss_editor.insertHTML(imageGroupContainer.html());
+
+					// prevent user input within the image group
+					$('#'+imageGroupContainerId).attr('contenteditable', 'false');
 				}
 
 				var imageContainer = $('<div><div class="imageContainer" id="'+imageContainerId+'">'+
@@ -1403,6 +1408,14 @@
 				// change imageContainer's size to fit image size
 				$("#"+imageContainerId).width(width)
 				$("#"+imageContainerId).height(height)
+
+				// create p after image group if not exist
+				if ($('#'+pAfterImageGroupContainerId).length == 0) {
+					$('#'+imageGroupContainerId).after('<p id='+pAfterImageGroupContainerId+'><br></p>');
+				}
+
+				// move cursor to p
+				zss_editor.focusEditor(pAfterImageGroupContainerId)
 				zss_editor.enabledEditingItems();
 			}
 
