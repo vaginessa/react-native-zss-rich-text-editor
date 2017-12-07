@@ -316,7 +316,7 @@ class RichTextToolbar extends Component {
 
       let isMultiple = images.length > 1
 
-      images.map(image => {
+      images.reverse().map(image => {
         image.src = 'data:image/png;base64,' + image.data
         image.data = undefined
 
