@@ -1,20 +1,48 @@
 {
-  "name": "react-native-zss-rich-text-editor",
-  "repository": {
+  "_from": "git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#master",
+  "_id": "react-native-zss-rich-text-editor@1.0.2",
+  "_inBundle": false,
+  "_integrity": "sha1-XWNOKp5YfRh3pc6MaamXLTTvFHM=",
+  "_location": "/react-native-zss-rich-text-editor",
+  "_phantomChildren": {},
+  "_requested": {
     "type": "git",
-    "url": "https://github.com/wix/react-native-zss-rich-text-editor.git"
+    "raw": "react-native-zss-rich-text-editor@git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#master",
+    "name": "react-native-zss-rich-text-editor",
+    "escapedName": "react-native-zss-rich-text-editor",
+    "rawSpec": "git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#master",
+    "saveSpec": "git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#master",
+    "fetchSpec": "https://github.com/hk01-digital/react-native-zss-rich-text-editor.git",
+    "gitCommittish": "master"
   },
-  "version": "1.0.2",
-  "description": "React Native Wrapper for ZSSRichTextEditor",
-  "main": "index.js",
-  "license": "SEE LICENSE IN LICENSE",
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#668265c8962638f10053657a9a0e1516045cd751",
+  "_spec": "react-native-zss-rich-text-editor@git+https://github.com/hk01-digital/react-native-zss-rich-text-editor.git#master",
+  "_where": "/Users/user/Desktop/Git/ugc-mobile-app",
+  "bugs": {
+    "url": "https://github.com/wix/react-native-zss-rich-text-editor/issues"
+  },
+  "bundleDependencies": false,
   "dependencies": {
-    "react-native-webview-bridge-updated": "^1.0.0",
+    "react-native-htmlview": "^0.12.1",
     "react-native-parse-html": "^2.2.6",
-    "react-native-htmlview": "^0.12.1"
+    "react-native-webview-bridge-updated": "^1.0.0"
   },
+  "deprecated": false,
+  "description": "React Native Wrapper for ZSSRichTextEditor",
+  "homepage": "https://github.com/wix/react-native-zss-rich-text-editor#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "index.js",
+  "name": "react-native-zss-rich-text-editor",
   "peerDependencies": {
     "react": "*",
     "react-native": ">=0.31.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix/react-native-zss-rich-text-editor.git"
+  },
+  "version": "1.0.2"
 }
