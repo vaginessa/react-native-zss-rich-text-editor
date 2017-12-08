@@ -5,6 +5,7 @@ import {InjectedMessageHandler} from './WebviewMessageHandler';
 import {actions, messages} from './const';
 import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions, ScrollView} from 'react-native';
 import HTMLView from 'react-native-htmlview'
+import parse5 from 'react-native-parse-html'
 
 const injectScript = `
   (function () {
@@ -612,6 +613,117 @@ export default class RichTextEditor extends Component {
         }
       }, 5000);
     });
+  } 
+  
+  // TODO: move all html parsing related function to new class
+  async getHTML () {
+    const content = await this.getContentHtml()
+    console.log('getHTML', content)
+    this.parseHTML(content)
+  }
+
+  parseHTML = (html) => {
+    var result = {}
+    var blocks = []
+    var fragment = parse5.parseFragment(html)
+    fragment.childNodes.map(node => {
+      console.log("node :", node)
+      var block = {}
+      switch(node.nodeName) {
+        case 'p':
+          block = this.textBlockFromNode(node)
+          break
+
+        case 'div':
+          block = this.imageBlocksFromNode(node)
+          break
+
+        default:
+          console.log("Other Node :", node.nodeName)
+      }
+      if (this.isValidBlock(block)) {
+        blocks.push(block)
+      }
+    })
+    result['blocks'] = blocks
+    const jsonResult = JSON.stringify(result)
+    console.log('jsonResult :', jsonResult)
+    return jsonResult
+  }
+
+  textBlockFromNode = (node) => {
+    var block = {}
+    var text = this.textFromNode(node)
+    if (text != '') {
+      block['blockType'] = 'Text'
+      block['htmlContent'] = text
+    }
+    return block
+  }
+
+  imageBlocksFromNode = (node) => {
+    var block = {}
+    var imageBlocks = []
+    // loop all imageContainers inside a group
+    node.childNodes.map(imageContainer => {
+      // get the image inside container
+      var image = imageContainer.childNodes[imageContainer.childNodes.length - 1]
+      
+      var imageBlock = {}
+      image && image.attrs.map(attr => {
+        switch(attr.name) {
+          case 'localidentifier':
+            imageBlock['mediaId'] = attr.value
+            break
+          case 'index':
+            // TODO: replace this dummy url to real one from uploadImage api response
+            imageBlock['url'] = "cdn.hk01.com/image/"+attr.value
+            break
+          case 'mime':
+            const format = attr.value
+            imageBlock['format'] = format.substring(format.lastIndexOf("/") + 1, format.length)
+            break
+          case 'originalwidth':
+            imageBlock['width'] = parseInt(attr.value)
+            break
+          case 'originalheight':
+            imageBlock['height'] = parseInt(attr.value)
+            break
+        }
+      })
+      if (imageBlock['mediaId'] != undefined) {
+        imageBlocks.push(imageBlock)
+      }
+    })
+
+    if (imageBlocks.length > 0) {
+      block['blockType'] = 'image'
+      block['images'] = imageBlocks
+    }
+    return block
+  }
+  
+  isValidBlock = (block) => {
+    return block['blockType'] != undefined
+  }
+
+  textFromNode = (node) => {
+    var text = ''
+    node.childNodes && node.childNodes.map(childNode => {
+      if (childNode.nodeName === '#text') {
+        text = childNode.value
+      }
+    })
+    return text
+  }
+
+  idFromNode = (node) => {
+    var id = ''
+    node.attrs.map(attr => {
+      if (attr.name === 'id')
+        id = attr.value
+    })
+    return id
   }
 
   setTitleFocusHandler(callbackHandler) {
