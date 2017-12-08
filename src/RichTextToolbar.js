@@ -296,7 +296,6 @@ class RichTextToolbar extends Component {
         }
         break;
       case actions.hashTag:
-        this.getHTML()
         break;
     }
   }
